@@ -1,4 +1,4 @@
-use xors::{BoardLocation, GameBoard, PlayerToken};
+use xors::board::{BoardLocation, GameBoard, PlayerToken};
 
 fn main() {
     let mut board = GameBoard::default();
