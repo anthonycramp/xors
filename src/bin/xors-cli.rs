@@ -1,3 +1,5 @@
+use xors::{BoardLocation, GameBoard, PlayerToken};
+
 fn main() {
     let mut board = GameBoard::default();
     board.play(BoardLocation::TopCentre, PlayerToken::Cross);
