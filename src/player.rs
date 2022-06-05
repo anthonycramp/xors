@@ -7,7 +7,7 @@ pub struct ScriptedPlayer {
     play_index: usize,
 }
 
-enum PlayerError {
+pub enum PlayerError {
     NoMoreMoves,
 }
 
