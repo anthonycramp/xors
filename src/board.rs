@@ -4,6 +4,7 @@ pub enum PlayerToken {
     Cross,
 }
 
+#[derive(Clone)]
 pub enum BoardLocation {
     TopLeft,
     TopCentre,
@@ -44,6 +45,19 @@ impl GameBoard {
         }
     }
 
+    pub fn get(&self, location: BoardLocation) -> Option<PlayerToken> {
+        match location {
+            BoardLocation::TopLeft => self.top_left.clone(),
+            BoardLocation::TopCentre => self.top_centre.clone(),
+            BoardLocation::TopRight => self.top_right.clone(),
+            BoardLocation::MiddleLeft => self.middle_left.clone(),
+            BoardLocation::MiddleCentre => self.middle_centre.clone(),
+            BoardLocation::MiddleRight => self.middle_right.clone(),
+            BoardLocation::BottomLeft => self.bottom_left.clone(),
+            BoardLocation::BottomCentre => self.bottom_centre.clone(),
+            BoardLocation::BottomRight => self.bottom_right.clone(),
+        }
+    }
     pub fn is_top_row_win(&self) -> bool {
         self.top_left.is_some()
             && self.top_left == self.top_centre
