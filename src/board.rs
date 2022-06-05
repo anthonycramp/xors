@@ -58,6 +58,18 @@ impl GameBoard {
             BoardLocation::BottomRight => self.bottom_right.clone(),
         }
     }
+
+    pub fn is_full(&self) -> bool {
+        self.top_left.is_some()
+            && self.top_centre.is_some()
+            && self.top_right.is_some()
+            && self.middle_left.is_some()
+            && self.middle_centre.is_some()
+            && self.middle_right.is_some()
+            && self.bottom_left.is_some()
+            && self.bottom_centre.is_some()
+            && self.bottom_right.is_some()
+    }
     pub fn is_top_row_win(&self) -> bool {
         self.top_left.is_some()
             && self.top_left == self.top_centre

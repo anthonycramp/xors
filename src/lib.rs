@@ -101,6 +101,8 @@ impl Game {
             } else {
                 Some(GameResult::Player2)
             }
+        } else if self.board.is_full() {
+            Some(GameResult::Tie)
         } else {
             None
         }
@@ -133,5 +135,36 @@ mod tests {
         game.register_player(player2);
         let result = game.play();
         assert_eq!(Some(GameResult::Player1), game.result());
+    }
+
+    #[test]
+    pub fn test_tied_game() {
+        let mut game = Game::new();
+        let player1 = ScriptedPlayer::new(
+            "Yasmin",
+            BoardToken::Cross,
+            &vec![
+                BoardLocation::MiddleCentre,
+                BoardLocation::TopCentre,
+                BoardLocation::MiddleRight,
+                BoardLocation::BottomLeft,
+                BoardLocation::BottomRight,
+            ],
+        );
+        let player2 = ScriptedPlayer::new(
+            "Mummy",
+            BoardToken::Nought,
+            &vec![
+                BoardLocation::TopLeft,
+                BoardLocation::BottomCentre,
+                BoardLocation::MiddleLeft,
+                BoardLocation::TopRight,
+            ],
+        );
+
+        game.register_player(player1);
+        game.register_player(player2);
+        let result = game.play();
+        assert_eq!(Some(GameResult::Tie), game.result());
     }
 }
