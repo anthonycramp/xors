@@ -4,7 +4,7 @@ pub mod player;
 use board::*;
 use player::*;
 
-enum Player {
+enum Turn {
     Player1,
     Player2,
 }
@@ -19,7 +19,7 @@ enum GameResult {
 struct Game {
     player1: Option<ScriptedPlayer>,
     player2: Option<ScriptedPlayer>,
-    next_play: Player,
+    next_turn: Turn,
     board: GameBoard,
 }
 
@@ -28,7 +28,7 @@ impl Game {
         Game {
             player1: None,
             player2: None,
-            next_play: Player::Player1,
+            next_turn: Turn::Player1,
             board: GameBoard::default(),
         }
     }
@@ -50,19 +50,19 @@ impl Game {
     }
 
     fn player_move(&mut self) {
-        match self.next_play {
-            Player::Player1 => {
+        match self.next_turn {
+            Turn::Player1 => {
                 if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
                     self.board.play(location, token);
-                    self.next_play = Player::Player2;
+                    self.next_turn = Turn::Player2;
                 } else {
                     panic!("Player1 out of moves");
                 }
             }
-            Player::Player2 => {
+            Turn::Player2 => {
                 if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
                     self.board.play(location, token);
-                    self.next_play = Player::Player1;
+                    self.next_turn = Turn::Player1;
                 } else {
                     panic!("Player2 out of moves")
                 }
