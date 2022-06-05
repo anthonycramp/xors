@@ -1,41 +1,12 @@
 pub mod board;
+pub mod player;
 
 use board::*;
+use player::*;
 
 enum Player {
     Player1,
     Player2,
-}
-
-struct ScriptedPlayer {
-    id: String,
-    token: PlayerToken,
-    play_list: Vec<BoardLocation>,
-    play_index: usize,
-}
-
-enum GameError {
-    NoMoreMoves,
-}
-
-impl ScriptedPlayer {
-    fn new(id: &str, token: PlayerToken, play_list: &[BoardLocation]) -> Self {
-        Self {
-            id: String::from(id),
-            token: token,
-            play_list: play_list.into(),
-            play_index: 0,
-        }
-    }
-    fn play(&mut self) -> Result<(PlayerToken, BoardLocation), GameError> {
-        if self.play_index == self.play_list.len() {
-            Err(GameError::NoMoreMoves)
-        } else {
-            let ret = (self.token.clone(), self.play_list[self.play_index].clone());
-            self.play_index += 1;
-            Ok(ret)
-        }
-    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -145,7 +116,7 @@ mod tests {
         let mut game = Game::new();
         let player1 = ScriptedPlayer::new(
             "Yasmin",
-            PlayerToken::Cross,
+            BoardToken::Cross,
             &vec![
                 BoardLocation::MiddleCentre,
                 BoardLocation::TopCentre,
@@ -154,7 +125,7 @@ mod tests {
         );
         let player2 = ScriptedPlayer::new(
             "Mummy",
-            PlayerToken::Cross,
+            BoardToken::Nought,
             &vec![BoardLocation::TopLeft, BoardLocation::MiddleLeft],
         );
 

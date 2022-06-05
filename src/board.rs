@@ -1,5 +1,5 @@
 #[derive(Debug, PartialEq, Clone)]
-pub enum PlayerToken {
+pub enum BoardToken {
     Nought,
     Cross,
 }
@@ -19,19 +19,19 @@ pub enum BoardLocation {
 
 #[derive(Default, Debug)]
 pub struct GameBoard {
-    top_left: Option<PlayerToken>,
-    top_centre: Option<PlayerToken>,
-    top_right: Option<PlayerToken>,
-    middle_left: Option<PlayerToken>,
-    middle_centre: Option<PlayerToken>,
-    middle_right: Option<PlayerToken>,
-    bottom_left: Option<PlayerToken>,
-    bottom_centre: Option<PlayerToken>,
-    bottom_right: Option<PlayerToken>,
+    top_left: Option<BoardToken>,
+    top_centre: Option<BoardToken>,
+    top_right: Option<BoardToken>,
+    middle_left: Option<BoardToken>,
+    middle_centre: Option<BoardToken>,
+    middle_right: Option<BoardToken>,
+    bottom_left: Option<BoardToken>,
+    bottom_centre: Option<BoardToken>,
+    bottom_right: Option<BoardToken>,
 }
 
 impl GameBoard {
-    pub fn play(&mut self, location: BoardLocation, player: PlayerToken) {
+    pub fn play(&mut self, location: BoardLocation, player: BoardToken) {
         match location {
             BoardLocation::TopLeft => self.top_left = Some(player),
             BoardLocation::TopCentre => self.top_centre = Some(player),
@@ -45,7 +45,7 @@ impl GameBoard {
         }
     }
 
-    pub fn get(&self, location: BoardLocation) -> Option<PlayerToken> {
+    pub fn get(&self, location: BoardLocation) -> Option<BoardToken> {
         match location {
             BoardLocation::TopLeft => self.top_left.clone(),
             BoardLocation::TopCentre => self.top_centre.clone(),
@@ -115,11 +115,11 @@ mod tests {
     pub fn test_is_top_row_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_top_row_win());
-        board.play(BoardLocation::TopCentre, PlayerToken::Cross);
+        board.play(BoardLocation::TopCentre, BoardToken::Cross);
         assert!(!board.is_top_row_win());
-        board.play(BoardLocation::TopRight, PlayerToken::Cross);
+        board.play(BoardLocation::TopRight, BoardToken::Cross);
         assert!(!board.is_top_row_win());
-        board.play(BoardLocation::TopLeft, PlayerToken::Cross);
+        board.play(BoardLocation::TopLeft, BoardToken::Cross);
         assert!(board.is_top_row_win());
     }
 
@@ -127,11 +127,11 @@ mod tests {
     pub fn test_is_middle_row_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_middle_row_win());
-        board.play(BoardLocation::MiddleCentre, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
         assert!(!board.is_middle_row_win());
-        board.play(BoardLocation::MiddleRight, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleRight, BoardToken::Cross);
         assert!(!board.is_middle_row_win());
-        board.play(BoardLocation::MiddleLeft, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleLeft, BoardToken::Cross);
         assert!(board.is_middle_row_win());
     }
 
@@ -139,11 +139,11 @@ mod tests {
     pub fn test_is_bottom_row_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_bottom_row_win());
-        board.play(BoardLocation::BottomCentre, PlayerToken::Cross);
+        board.play(BoardLocation::BottomCentre, BoardToken::Cross);
         assert!(!board.is_bottom_row_win());
-        board.play(BoardLocation::BottomRight, PlayerToken::Cross);
+        board.play(BoardLocation::BottomRight, BoardToken::Cross);
         assert!(!board.is_bottom_row_win());
-        board.play(BoardLocation::BottomLeft, PlayerToken::Cross);
+        board.play(BoardLocation::BottomLeft, BoardToken::Cross);
         assert!(board.is_bottom_row_win());
     }
 
@@ -151,11 +151,11 @@ mod tests {
     pub fn test_is_left_column_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_left_column_win());
-        board.play(BoardLocation::TopLeft, PlayerToken::Cross);
+        board.play(BoardLocation::TopLeft, BoardToken::Cross);
         assert!(!board.is_left_column_win());
-        board.play(BoardLocation::MiddleLeft, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleLeft, BoardToken::Cross);
         assert!(!board.is_left_column_win());
-        board.play(BoardLocation::BottomLeft, PlayerToken::Cross);
+        board.play(BoardLocation::BottomLeft, BoardToken::Cross);
         assert!(board.is_left_column_win());
     }
 
@@ -163,11 +163,11 @@ mod tests {
     pub fn test_is_centre_column_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_centre_column_win());
-        board.play(BoardLocation::TopCentre, PlayerToken::Cross);
+        board.play(BoardLocation::TopCentre, BoardToken::Cross);
         assert!(!board.is_centre_column_win());
-        board.play(BoardLocation::MiddleCentre, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
         assert!(!board.is_centre_column_win());
-        board.play(BoardLocation::BottomCentre, PlayerToken::Cross);
+        board.play(BoardLocation::BottomCentre, BoardToken::Cross);
         assert!(board.is_centre_column_win());
     }
 
@@ -175,11 +175,11 @@ mod tests {
     pub fn test_is_right_column_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_right_column_win());
-        board.play(BoardLocation::TopRight, PlayerToken::Cross);
+        board.play(BoardLocation::TopRight, BoardToken::Cross);
         assert!(!board.is_right_column_win());
-        board.play(BoardLocation::MiddleRight, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleRight, BoardToken::Cross);
         assert!(!board.is_right_column_win());
-        board.play(BoardLocation::BottomRight, PlayerToken::Cross);
+        board.play(BoardLocation::BottomRight, BoardToken::Cross);
         assert!(board.is_right_column_win());
     }
 
@@ -187,11 +187,11 @@ mod tests {
     pub fn test_is_left_right_diagonal_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_left_right_diagonal_win());
-        board.play(BoardLocation::TopLeft, PlayerToken::Cross);
+        board.play(BoardLocation::TopLeft, BoardToken::Cross);
         assert!(!board.is_left_right_diagonal_win());
-        board.play(BoardLocation::MiddleCentre, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
         assert!(!board.is_left_right_diagonal_win());
-        board.play(BoardLocation::BottomRight, PlayerToken::Cross);
+        board.play(BoardLocation::BottomRight, BoardToken::Cross);
         assert!(board.is_left_right_diagonal_win());
     }
 
@@ -199,11 +199,11 @@ mod tests {
     pub fn test_is_right_left_diagonal_win() {
         let mut board = GameBoard::default();
         assert!(!board.is_right_left_diagonal_win());
-        board.play(BoardLocation::TopRight, PlayerToken::Cross);
+        board.play(BoardLocation::TopRight, BoardToken::Cross);
         assert!(!board.is_right_left_diagonal_win());
-        board.play(BoardLocation::MiddleCentre, PlayerToken::Cross);
+        board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
         assert!(!board.is_right_left_diagonal_win());
-        board.play(BoardLocation::BottomLeft, PlayerToken::Cross);
+        board.play(BoardLocation::BottomLeft, BoardToken::Cross);
         assert!(board.is_right_left_diagonal_win());
     }
 }
