@@ -10,13 +10,13 @@ enum Turn {
 }
 
 #[derive(Debug, PartialEq)]
-enum GameResult {
+pub enum GameResult {
     Player1,
     Player2,
     Tie,
 }
 
-struct Game {
+pub struct Game {
     player1: Option<ScriptedPlayer>,
     player2: Option<ScriptedPlayer>,
     next_turn: Turn,
@@ -24,7 +24,7 @@ struct Game {
 }
 
 impl Game {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Game {
             player1: None,
             player2: None,
@@ -33,17 +33,19 @@ impl Game {
         }
     }
 
-    fn register_player(&mut self, player: ScriptedPlayer) {
+    pub fn register_player(&mut self, player: ScriptedPlayer) {
         match self.player1 {
             None => self.player1 = Some(player),
             _ => self.player2 = Some(player),
         }
     }
 
-    fn play(&mut self) -> GameResult {
+    pub fn play(&mut self) -> GameResult {
         loop {
+            print!("{}", &self.board);
             self.player_move();
             if let Some(res) = self.result() {
+                print!("{}", &self.board);
                 return res;
             }
         }

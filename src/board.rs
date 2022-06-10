@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum BoardToken {
     Nought,
@@ -116,6 +118,46 @@ impl GameBoard {
         self.top_right.is_some()
             && self.top_right == self.middle_centre
             && self.top_right == self.bottom_left
+    }
+}
+
+fn display_token(token: &Option<BoardToken>) -> String {
+    if let Some(t) = token {
+        match t {
+            BoardToken::Cross => "X".into(),
+            BoardToken::Nought => "O".into(),
+        }
+    } else {
+        " ".into()
+    }
+}
+
+impl fmt::Display for GameBoard {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(
+            f,
+            r#"     |     |     
+  {}  |  {}  |  {}  
+1    |2    |3    
+-----------------
+     |     |     
+  {}  |  {}  |  {}  
+4    |5    |6    
+-----------------
+     |     |     
+  {}  |  {}  |  {}  
+7    |8    |9    
+"#,
+            display_token(&self.top_left),
+            display_token(&self.top_centre),
+            display_token(&self.top_right),
+            display_token(&self.middle_left),
+            display_token(&self.middle_centre),
+            display_token(&self.middle_right),
+            display_token(&self.bottom_left),
+            display_token(&self.bottom_centre),
+            display_token(&self.bottom_right)
+        )
     }
 }
 
