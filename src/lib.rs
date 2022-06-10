@@ -23,6 +23,12 @@ pub struct Game {
     board: GameBoard,
 }
 
+impl Default for Game {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Game {
     pub fn new() -> Self {
         Game {
@@ -54,6 +60,7 @@ impl Game {
     fn player_move(&mut self) {
         match self.next_turn {
             Turn::Player1 => {
+                println!("{}, it's your turn!", self.player1.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
                     self.board.play(location, token);
                     self.next_turn = Turn::Player2;
@@ -62,6 +69,7 @@ impl Game {
                 }
             }
             Turn::Player2 => {
+                println!("{}, it's your turn!", self.player2.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
                     self.board.play(location, token);
                     self.next_turn = Turn::Player1;

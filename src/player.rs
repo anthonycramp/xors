@@ -1,7 +1,7 @@
 use crate::board::*;
 
 pub struct ScriptedPlayer {
-    id: String,
+    pub id: String,
     pub token: BoardToken,
     play_list: Vec<BoardLocation>,
     play_index: usize,
@@ -15,7 +15,7 @@ impl ScriptedPlayer {
     pub fn new(id: &str, token: BoardToken, play_list: &[BoardLocation]) -> Self {
         Self {
             id: String::from(id),
-            token: token,
+            token,
             play_list: play_list.into(),
             play_index: 0,
         }
