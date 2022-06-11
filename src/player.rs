@@ -1,4 +1,5 @@
 use crate::board::*;
+use std::io::{self, Write};
 
 pub struct ScriptedPlayer {
     pub id: String,
@@ -7,8 +8,14 @@ pub struct ScriptedPlayer {
     play_index: usize,
 }
 
+pub struct InteractivePlayer {
+    pub id: String,
+    pub token: BoardToken,
+}
+
 pub enum PlayerError {
     NoMoreMoves,
+    InvalidLocation,
 }
 
 impl ScriptedPlayer {
@@ -27,6 +34,41 @@ impl ScriptedPlayer {
             let ret = (self.token.clone(), self.play_list[self.play_index].clone());
             self.play_index += 1;
             Ok(ret)
+        }
+    }
+}
+
+impl InteractivePlayer {
+    pub fn new(id: &str, token: BoardToken) -> Self {
+        Self {
+            id: String::from(id),
+            token,
+        }
+    }
+
+    pub fn play(&self) -> Result<(BoardToken, BoardLocation), PlayerError> {
+        print!("{}", "Enter a location (1-9): ");
+        io::stdout().flush().expect("Error writing to screen");
+        let mut input = String::new();
+        if let Err(_) = io::stdin().read_line(&mut input) {
+            return Err(PlayerError::InvalidLocation);
+        }
+        let input = input.trim();
+        if let Ok(board_location) = input.parse::<u32>() {
+            match board_location {
+                1 => Ok((self.token.clone(), BoardLocation::TopLeft)),
+                2 => Ok((self.token.clone(), BoardLocation::TopCentre)),
+                3 => Ok((self.token.clone(), BoardLocation::TopRight)),
+                4 => Ok((self.token.clone(), BoardLocation::MiddleLeft)),
+                5 => Ok((self.token.clone(), BoardLocation::MiddleCentre)),
+                6 => Ok((self.token.clone(), BoardLocation::MiddleRight)),
+                7 => Ok((self.token.clone(), BoardLocation::BottomLeft)),
+                8 => Ok((self.token.clone(), BoardLocation::BottomCentre)),
+                9 => Ok((self.token.clone(), BoardLocation::BottomRight)),
+                _ => Err(PlayerError::InvalidLocation),
+            }
+        } else {
+            Err(PlayerError::InvalidLocation)
         }
     }
 }
