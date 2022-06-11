@@ -32,19 +32,86 @@ pub struct GameBoard {
     bottom_right: Option<BoardToken>,
 }
 
+pub enum BoardError {
+    BoardLocationOccupied(BoardLocation),
+}
+
 impl GameBoard {
-    pub fn play(&mut self, location: BoardLocation, player: BoardToken) {
+    pub fn play(&mut self, location: BoardLocation, player: BoardToken) -> Result<(), BoardError> {
         match location {
-            BoardLocation::TopLeft => self.top_left = Some(player),
-            BoardLocation::TopCentre => self.top_centre = Some(player),
-            BoardLocation::TopRight => self.top_right = Some(player),
-            BoardLocation::MiddleLeft => self.middle_left = Some(player),
-            BoardLocation::MiddleCentre => self.middle_centre = Some(player),
-            BoardLocation::MiddleRight => self.middle_right = Some(player),
-            BoardLocation::BottomLeft => self.bottom_left = Some(player),
-            BoardLocation::BottomCentre => self.bottom_centre = Some(player),
-            BoardLocation::BottomRight => self.bottom_right = Some(player),
+            BoardLocation::TopLeft => {
+                if self.top_left.is_none() {
+                    self.top_left = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(BoardLocation::TopLeft));
+                }
+            }
+            BoardLocation::TopCentre => {
+                if self.top_centre.is_none() {
+                    self.top_centre = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(BoardLocation::TopCentre));
+                }
+            }
+            BoardLocation::TopRight => {
+                if self.top_right.is_none() {
+                    self.top_right = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(BoardLocation::TopRight));
+                }
+            }
+            BoardLocation::MiddleLeft => {
+                if self.middle_left.is_none() {
+                    self.middle_left = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(BoardLocation::MiddleLeft));
+                }
+            }
+            BoardLocation::MiddleCentre => {
+                if self.middle_centre.is_none() {
+                    self.middle_centre = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(
+                        BoardLocation::MiddleCentre,
+                    ));
+                }
+            }
+            BoardLocation::MiddleRight => {
+                if self.middle_right.is_none() {
+                    self.middle_right = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(
+                        BoardLocation::MiddleRight,
+                    ));
+                }
+            }
+            BoardLocation::BottomLeft => {
+                if self.bottom_left.is_none() {
+                    self.bottom_left = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(BoardLocation::BottomLeft));
+                }
+            }
+            BoardLocation::BottomCentre => {
+                if self.bottom_centre.is_none() {
+                    self.bottom_centre = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(
+                        BoardLocation::BottomCentre,
+                    ));
+                }
+            }
+            BoardLocation::BottomRight => {
+                if self.bottom_right.is_none() {
+                    self.bottom_right = Some(player);
+                } else {
+                    return Err(BoardError::BoardLocationOccupied(
+                        BoardLocation::BottomRight,
+                    ));
+                }
+            }
         }
+        Ok(())
     }
 
     pub fn get(&self, location: BoardLocation) -> Option<BoardToken> {
@@ -259,5 +326,32 @@ mod tests {
         assert!(!board.is_right_left_diagonal_win());
         board.play(BoardLocation::BottomLeft, BoardToken::Cross);
         assert!(board.is_right_left_diagonal_win());
+    }
+
+    #[test]
+    pub fn test_place_token_in_free_space() {
+        let mut board = GameBoard::default();
+        let res = board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
+        assert!(res.is_ok());
+        assert_eq!(board.middle_centre, Some(BoardToken::Cross));
+        assert!(board.top_left.is_none());
+        assert!(board.top_centre.is_none());
+        assert!(board.top_right.is_none());
+        assert!(board.middle_left.is_none());
+        assert!(board.middle_right.is_none());
+        assert!(board.bottom_left.is_none());
+        assert!(board.bottom_centre.is_none());
+        assert!(board.bottom_right.is_none());
+    }
+
+    #[test]
+    pub fn test_place_token_in_occupied_space() {
+        let mut board = GameBoard::default();
+        let res = board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
+        assert!(res.is_ok());
+        let res = board.play(BoardLocation::MiddleCentre, BoardToken::Cross);
+        assert!(res.is_err());
+        let res = board.play(BoardLocation::MiddleCentre, BoardToken::Nought);
+        assert!(res.is_err());
     }
 }
