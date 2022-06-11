@@ -170,19 +170,25 @@ impl InteractiveGame {
             Turn::Player1 => {
                 println!("{}, it's your turn!", self.player1.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
-                    self.board.play(location, token);
-                    self.next_turn = Turn::Player2;
+                    if let Ok(_) = self.board.play(location, token) {
+                        self.next_turn = Turn::Player2;
+                    } else {
+                        println!("That location is not free. Choose another.");
+                    }
                 } else {
-                    panic!("Player1 out of moves");
+                    println!("Sorry. Didn't understand that. Try again.");
                 }
             }
             Turn::Player2 => {
                 println!("{}, it's your turn!", self.player2.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
-                    self.board.play(location, token);
-                    self.next_turn = Turn::Player1;
+                    if let Ok(_) = self.board.play(location, token) {
+                        self.next_turn = Turn::Player1;
+                    } else {
+                        println!("That location is not free. Choose another.");
+                    }
                 } else {
-                    panic!("Player2 out of moves")
+                    println!("Sorry. Didn't understand that. Try again.");
                 }
             }
         }
