@@ -23,6 +23,13 @@ pub struct Game {
     board: GameBoard,
 }
 
+pub struct InteractiveGame {
+    player1: Option<InteractivePlayer>,
+    player2: Option<InteractivePlayer>,
+    next_turn: Turn,
+    board: GameBoard,
+}
+
 impl Default for Game {
     fn default() -> Self {
         Self::new()
@@ -75,6 +82,113 @@ impl Game {
                     self.next_turn = Turn::Player1;
                 } else {
                     panic!("Player2 out of moves")
+                }
+            }
+        }
+    }
+
+    fn result(&self) -> Option<GameResult> {
+        if self.board.is_top_row_win()
+            || self.board.is_left_column_win()
+            || self.board.is_left_right_diagonal_win()
+        {
+            if self.board.get(BoardLocation::TopLeft).unwrap()
+                == self.player1.as_ref().unwrap().token
+            {
+                Some(GameResult::Player1)
+            } else {
+                Some(GameResult::Player2)
+            }
+        } else if self.board.is_middle_row_win()
+            || self.board.is_centre_column_win()
+            || self.board.is_right_left_diagonal_win()
+        {
+            if self.board.get(BoardLocation::MiddleCentre).unwrap()
+                == self.player1.as_ref().unwrap().token
+            {
+                Some(GameResult::Player1)
+            } else {
+                Some(GameResult::Player2)
+            }
+        } else if self.board.is_bottom_row_win() || self.board.is_right_column_win() {
+            if self.board.get(BoardLocation::BottomRight).unwrap()
+                == self.player1.as_ref().unwrap().token
+            {
+                Some(GameResult::Player1)
+            } else {
+                Some(GameResult::Player2)
+            }
+        } else if self.board.is_full() {
+            Some(GameResult::Tie)
+        } else {
+            None
+        }
+    }
+}
+
+impl Default for InteractiveGame {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl InteractiveGame {
+    pub fn new() -> Self {
+        Self {
+            player1: None,
+            player2: None,
+            next_turn: Turn::Player1,
+            board: GameBoard::default(),
+        }
+    }
+
+    pub fn register_player(&mut self, player: InteractivePlayer) {
+        match self.player1 {
+            None => self.player1 = Some(player),
+            _ => self.player2 = Some(player),
+        }
+    }
+
+    pub fn play(&mut self) -> GameResult {
+        loop {
+            print!("{}", &self.board);
+            self.player_move();
+            if let Some(res) = self.result() {
+                print!("{}", &self.board);
+                match res {
+                    GameResult::Player1 => println!("{} wins!", self.player1.as_ref().unwrap().id),
+                    GameResult::Player2 => println!("{} wins!", self.player2.as_ref().unwrap().id),
+                    GameResult::Tie => println!("Well played. It's a tie!"),
+                }
+                return res;
+            }
+        }
+    }
+
+    fn player_move(&mut self) {
+        match self.next_turn {
+            Turn::Player1 => {
+                println!("{}, it's your turn!", self.player1.as_ref().unwrap().id);
+                if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
+                    if let Ok(_) = self.board.play(location, token) {
+                        self.next_turn = Turn::Player2;
+                    } else {
+                        println!("That location is not free. Choose another.");
+                    }
+                } else {
+                    println!("Sorry. Didn't understand that. Try again.");
+                }
+            }
+            Turn::Player2 => {
+                println!("{}, it's your turn!", self.player2.as_ref().unwrap().id);
+                if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
+                    if let Ok(_) = self.board.play(location, token) {
+                        self.next_turn = Turn::Player1;
+                    } else {
+                        println!("That location is not free. Choose another.");
+                    }
+                } else {
+                    println!("Sorry. Didn't understand that. Try again.");
                 }
             }
         }
