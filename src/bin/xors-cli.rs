@@ -1,4 +1,4 @@
-use xors::board::{BoardLocation, BoardToken};
+use xors::board::BoardToken;
 use xors::player::InteractivePlayer;
 use xors::RandomGame;
 

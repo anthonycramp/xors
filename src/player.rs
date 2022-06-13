@@ -70,10 +70,10 @@ impl InteractivePlayer {
     }
 
     pub fn play(&self) -> Result<(BoardToken, BoardLocation), PlayerError> {
-        print!("{}", "Enter a location (1-9): ");
+        print!("Enter a location (1-9): ");
         io::stdout().flush().expect("Error writing to screen");
         let mut input = String::new();
-        if let Err(_) = io::stdin().read_line(&mut input) {
+        if io::stdin().read_line(&mut input).is_err() {
             return Err(PlayerError::InvalidLocation);
         }
         let input = input.trim();

@@ -177,7 +177,7 @@ impl InteractiveGame {
             Turn::Player1 => {
                 println!("{}, it's your turn!", self.player1.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
-                    if let Ok(_) = self.board.play(location, token) {
+                    if self.board.play(location, token).is_ok() {
                         self.next_turn = Turn::Player2;
                     } else {
                         println!("That location is not free. Choose another.");
@@ -189,7 +189,7 @@ impl InteractiveGame {
             Turn::Player2 => {
                 println!("{}, it's your turn!", self.player2.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
-                    if let Ok(_) = self.board.play(location, token) {
+                    if self.board.play(location, token).is_ok() {
                         self.next_turn = Turn::Player1;
                     } else {
                         println!("That location is not free. Choose another.");
@@ -281,7 +281,7 @@ impl RandomGame {
             Turn::Player1 => {
                 println!("{}, it's your turn!", self.player1.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player1.as_mut().unwrap().play() {
-                    if let Ok(_) = self.board.play(location, token) {
+                    if self.board.play(location, token).is_ok() {
                         self.next_turn = Turn::Player2;
                     } else {
                         println!("That location is not free. Choose another.");
@@ -293,7 +293,7 @@ impl RandomGame {
             Turn::Player2 => {
                 println!("{}, it's your turn!", self.player2.as_ref().unwrap().id);
                 if let Ok((token, location)) = self.player2.as_mut().unwrap().play() {
-                    if let Ok(_) = self.board.play(location, token) {
+                    if self.board.play(location, token).is_ok() {
                         self.next_turn = Turn::Player1;
                     } else {
                         println!("That location is not free. Choose another.");
